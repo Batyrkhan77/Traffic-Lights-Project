@@ -11,6 +11,7 @@ from ultralytics import YOLO
 MODEL_PATH = "yolov8n.pt"  # n - самая быстрая; s/m/l - точнее, но тяжелее
 CONFIDENCE = 0.4          # порог уверенности детектора
 VEHICLE_CLASSES = [2, 3, 5, 7]  # COCO: 2=car, 3=motorcycle, 5=bus, 7=truck
+CLASS_NAMES = {2:"car", 3:"motorcycle", 5:"bus", 7:"truck"}
 
 
 def select_zone(frame):
@@ -84,6 +85,7 @@ def main():
 
         if results.boxes is not None:
             ids = results.boxes.id
+            classes = results.boxes.cls.cpu().numpy().astype(int)
             for i, box in enumerate(results.boxes.xyxy.cpu().numpy()):
                 x1, y1, x2, y2 = map(int, box)
 
@@ -99,9 +101,9 @@ def main():
                 color = (0, 255, 0) if inside else (200, 200, 200)
                 cv2.rectangle(frame, (x1, y1), (x2, y2), color, 2)
                 cv2.circle(frame, anchor, 4, (0, 0, 255), -1)
-                if ids is not None:
-                    cv2.putText(frame, f"#{int(ids[i])}", (x1, y1 - 6),
-                                cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
+                label = CLASS_NAMES[int(classes[i])]
+                cv2.putText(frame, label, (x1, y1 - 6),
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
 
         # Полупрозрачная заливка зоны
         overlay = frame.copy()

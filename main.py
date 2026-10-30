@@ -113,8 +113,7 @@ def main():
 
         cv2.putText(frame, f"In zone now: {in_zone_now}", (10, 30),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.9, (255, 255, 255), 2)
-        cv2.putText(frame, f"Total unique: {len(seen_ids)}", (10, 65),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.9, (255, 255, 255), 2)
+        
 
         cv2.imshow("Test", frame)
         key = cv2.waitKey(1) & 0xFF

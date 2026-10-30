@@ -9,7 +9,7 @@ import numpy as np
 from ultralytics import YOLO
 
 MODEL_PATH = "yolov8n.pt"  # n - самая быстрая; s/m/l - точнее, но тяжелее
-CONFIDENCE = 0.4          # порог уверенности детектора
+CONFIDENCE = 0.4         
 VEHICLE_CLASSES = [2, 3, 5, 7]  # COCO: 2=car, 3=motorcycle, 5=bus, 7=truck
 CLASS_NAMES = {2:"car", 3:"motorcycle", 5:"bus", 7:"truck"}
 

@@ -8,7 +8,7 @@ import cv2
 import numpy as np
 from ultralytics import YOLO
 
-MODEL_PATH = "yolov8n.pt"  # n - самая быстрая; s/m/l - точнее, но тяжелее
+MODEL_PATH = "yolov8n.pt"  
 CONFIDENCE = 0.4         
 VEHICLE_CLASSES = [2, 3, 5, 7]  # COCO: 2=car, 3=motorcycle, 5=bus, 7=truck
 CLASS_NAMES = {2:"car", 3:"motorcycle", 5:"bus", 7:"truck"}
@@ -29,7 +29,7 @@ def select_zone(frame):
     while True:
         canvas = frame.copy()
         for p in points:
-            cv2.circle(canvas, p, 5, (0, 255, 255), -1)  #кружок отмеченной точки
+            cv2.circle(canvas, p, 5, (0, 255, 255), -1)  
         if len(points) > 1:
             cv2.polylines(canvas, [np.array(points)], len(points) > 2, (0, 255, 255), 2)
         cv2.putText(canvas, "LMB: add point | R: reset | ENTER: done", (10, 25),
@@ -63,14 +63,14 @@ def main():
         return
 
     model = YOLO(MODEL_PATH)
-    seen_ids = set()  # все уникальные машины, которые побывали в зоне
+    seen_ids = set()  
 
     while True:
         ok, frame = cap.read()
         if not ok:
             break
 
-        # track() присваивает каждой машине постоянный ID между кадрами
+       
         results = model.track(
             frame,
             persist=True,
@@ -89,7 +89,7 @@ def main():
             for i, box in enumerate(results.boxes.xyxy.cpu().numpy()):
                 x1, y1, x2, y2 = map(int, box)
 
-                # Опорная точка - середина нижней границы рамки (там машина касается дороги)
+           
                 anchor = (int((x1 + x2) / 2), y2)
                 inside = cv2.pointPolygonTest(zone, anchor, False) >= 0
 
@@ -105,7 +105,7 @@ def main():
                 cv2.putText(frame, label, (x1, y1 - 6),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
 
-        # Полупрозрачная заливка зоны
+     
         overlay = frame.copy()
         cv2.fillPoly(overlay, [zone], (0, 0, 255) if in_zone_now else (0, 180, 0))
         frame = cv2.addWeighted(overlay, 0.25, frame, 0.75, 0)
